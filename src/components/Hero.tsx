@@ -19,12 +19,18 @@ export default function Hero() {
       gsap.set([textGroup.current, product.current], { opacity: 1, y: 0 });
     });
 
-    mm.add("(min-width: 0px)", () => {
-      const tl = gsap.timeline({ delay: 0.35 });
-      tl.from(".hero-rise", { y: 22, opacity: 0, duration: 0.9, ease: EASE.out, stagger: 0.12 });
+    // Below lg, skip the JS entrance fade entirely — content is visible
+    // immediately. On real mobile devices the delayed/staggered .from()
+    // tween could leave the copy stuck at its (opacity:0) starting state,
+    // reading as "missing" paragraph/buttons/spec-strip.
+    mm.add("(max-width: 1023px)", () => {
+      gsap.set(".hero-rise", { opacity: 1, y: 0 });
     });
 
     mm.add("(min-width: 1024px)", () => {
+      const entrance = gsap.timeline({ delay: 0.35 });
+      entrance.from(".hero-rise", { y: 22, opacity: 0, duration: 0.9, ease: EASE.out, stagger: 0.12 });
+
       gsap.set([product.current, textGroup.current], { willChange: "transform, opacity" });
 
       const tl = gsap.timeline({

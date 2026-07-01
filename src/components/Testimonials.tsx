@@ -1,6 +1,3 @@
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { Eyebrow } from "./primitives";
 
 const FEATURED = {
@@ -18,33 +15,8 @@ const QUOTES = [
 ];
 
 export default function Testimonials() {
-  const root = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 0px)", () => {
-        gsap.set(".testimonial-card", { opacity: 0, y: 30 });
-        const batch = ScrollTrigger.batch(".testimonial-card", {
-          start: "top 86%",
-          onEnter: (els) =>
-            gsap.fromTo(
-              els,
-              { opacity: 0, y: 30 },
-              { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.1, overwrite: true }
-            ),
-        });
-        return () => batch.forEach((t) => t.kill());
-      });
-
-      return () => mm.revert();
-    },
-    { scope: root }
-  );
-
   return (
-    <section ref={root} id="athletes" className="relative bg-base px-5 py-24 sm:px-8 lg:py-32">
+    <section id="athletes" className="relative bg-base px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-[1400px]">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div>

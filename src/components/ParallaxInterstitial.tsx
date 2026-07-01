@@ -1,45 +1,10 @@
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
 import { Eyebrow } from "./primitives";
 
 export default function ParallaxInterstitial() {
-  const root = useRef<HTMLDivElement>(null);
-  const back = useRef<HTMLDivElement>(null);
-  const haze = useRef<HTMLDivElement>(null);
-  const word = useRef<HTMLDivElement>(null);
-  const ground = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 0px)", () => {
-        const tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-        // Layered depth — each plane moves at a different rate.
-        tl.to(back.current, { yPercent: 14 }, 0)
-          .to(haze.current, { yPercent: 24 }, 0)
-          .to(word.current, { yPercent: -16 }, 0)
-          .to(ground.current, { yPercent: 34 }, 0);
-      });
-
-      return () => mm.revert();
-    },
-    { scope: root }
-  );
-
   return (
-    <section ref={root} className="relative h-[120vh] w-full overflow-hidden bg-base">
+    <section className="relative h-[70vh] min-h-[520px] w-full overflow-hidden bg-base">
       {/* Back plane — fairway */}
-      <div className="absolute -top-[8%] left-0 h-[124%] w-full" ref={back}>
+      <div className="absolute inset-0">
         <img
           src="/images/scene-fairway.jpg"
           alt="Misty championship fairway at dawn"
@@ -48,10 +13,9 @@ export default function ParallaxInterstitial() {
         />
       </div>
 
-      {/* Mid haze for atmosphere */}
+      {/* Haze for atmosphere */}
       <div
-        ref={haze}
-        className="absolute -top-[8%] left-0 h-[124%] w-full"
+        className="absolute inset-0"
         style={{
           background:
             "linear-gradient(to bottom, rgba(8,10,9,0.55) 0%, rgba(8,10,9,0.1) 35%, rgba(8,10,9,0.2) 65%, rgba(8,10,9,0.85) 100%)",
@@ -59,10 +23,7 @@ export default function ParallaxInterstitial() {
       />
 
       {/* Outlined kinetic wordmark */}
-      <div
-        ref={word}
-        className="pointer-events-none absolute inset-0 flex items-center justify-center"
-      >
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <span
           className="select-none whitespace-nowrap font-display text-[26vw] font-light leading-none tracking-tight text-transparent"
           style={{ WebkitTextStroke: "1px rgba(232,239,230,0.10)" }}
@@ -87,8 +48,7 @@ export default function ParallaxInterstitial() {
 
       {/* Ground vignette */}
       <div
-        ref={ground}
-        className="absolute -bottom-[12%] left-0 h-[60%] w-full"
+        className="absolute bottom-0 left-0 h-1/2 w-full"
         style={{ background: "linear-gradient(to top, var(--color-base) 8%, transparent 100%)" }}
       />
     </section>

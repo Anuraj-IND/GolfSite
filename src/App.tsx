@@ -6,6 +6,7 @@ import Hero from "@/components/Hero";
 import BallFlight from "@/components/BallFlight";
 import Showcase from "@/components/Showcase";
 import TechBreakdown from "@/components/TechBreakdown";
+import CategoryShop from "@/components/CategoryShop";
 import ParallaxInterstitial from "@/components/ParallaxInterstitial";
 import Testimonials from "@/components/Testimonials";
 import ShopCTA from "@/components/ShopCTA";
@@ -27,10 +28,19 @@ export default function App() {
     });
 
     // Recalculate all triggers after fonts + images have settled.
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener("load", refresh);
+    // Only ever run once — firing ScrollTrigger.refresh() more than once while
+    // the user is mid-scroll through a pinned section snaps/jumps the pin, which
+    // reads as a "scrolling glitch". Whichever signal lands first wins; the rest
+    // are no-ops.
+    let refreshed = false;
+    const refresh = () => {
+      if (refreshed) return;
+      refreshed = true;
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener("load", refresh, { once: true });
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => ScrollTrigger.refresh());
+      document.fonts.ready.then(refresh);
     }
     const t = window.setTimeout(refresh, 700);
 
@@ -58,6 +68,7 @@ export default function App() {
         <BallFlight />
         <Showcase />
         <TechBreakdown />
+        <CategoryShop />
         <ParallaxInterstitial />
         <Testimonials />
         <ShopCTA />
