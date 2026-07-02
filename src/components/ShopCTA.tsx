@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eyebrow, Button, ArrowRight } from "./primitives";
+import { Eyebrow, Button, ArrowRight, Reveal, SplitLines } from "./primitives";
 
 const BAG_PREVIEW = [
   { name: "Driver", img: "/images/product-driver.jpg" },
@@ -22,8 +22,9 @@ export default function ShopCTA() {
   };
 
   return (
-    <section id="shop" className="relative bg-base px-5 py-24 sm:px-8 lg:py-32">
+    <section id="shop" className="section-fade relative bg-base px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-[1100px]">
+        <Reveal y={48}>
         <div className="relative overflow-hidden rounded-3xl border border-line bg-surface px-6 py-16 text-center sm:px-12 lg:py-24">
           {/* ambient accent glow (static) */}
           <div
@@ -61,9 +62,9 @@ export default function ShopCTA() {
               ))}
             </div>
 
-            <h2 className="mx-auto mt-7 max-w-2xl font-display text-[clamp(2.4rem,6vw,4.4rem)] font-light leading-[0.98] tracking-[-0.02em] text-fg">
+            <SplitLines className="mx-auto mt-7 max-w-2xl font-display text-[clamp(2.4rem,6vw,4.4rem)] font-light leading-[0.98] tracking-[-0.02em] text-fg">
               Build your bag.
-            </h2>
+            </SplitLines>
             <p className="mx-auto mt-6 max-w-md text-muted">
               Drivers, irons, balls and apparel — engineered as one system.
               Free shipping and custom fitting on every order.
@@ -122,6 +123,7 @@ export default function ShopCTA() {
             </div>
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );

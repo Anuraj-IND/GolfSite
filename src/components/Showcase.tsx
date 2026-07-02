@@ -1,4 +1,8 @@
-import { Eyebrow, PlusIcon } from "./primitives";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "@/lib/gsap";
+import { EASE } from "@/lib/motion";
+import { Eyebrow, PlusIcon, SplitLines } from "./primitives";
 
 type Product = {
   n: string;
@@ -17,36 +21,89 @@ const PRODUCTS: Product[] = [
 ];
 
 export default function Showcase() {
+  const root = useRef<HTMLElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 0px)", () => {
+        // Staggered card entrance.
+        gsap.from(".showcase-card", {
+          y: 48,
+          autoAlpha: 0,
+          duration: 0.9,
+          ease: EASE.out,
+          stagger: 0.09,
+          scrollTrigger: {
+            trigger: grid.current,
+            start: "top 82%",
+            toggleActions: "play none none reverse",
+          },
+        });
+
+        // Gentle parallax inside each image window (image is pre-scaled so
+        // the drift never exposes edges). Runs on a wrapper so it never
+        // fights the CSS hover-zoom transition on the <img> itself.
+        gsap.utils.toArray<HTMLElement>(".showcase-parallax").forEach((layer) => {
+          const card = layer.closest(".showcase-card");
+          gsap.fromTo(
+            layer,
+            { yPercent: -7 },
+            {
+              yPercent: 7,
+              ease: "none",
+              scrollTrigger: {
+                trigger: card,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            }
+          );
+        });
+      });
+
+      return () => mm.revert();
+    },
+    { scope: root }
+  );
+
   return (
-    <section id="lineup" className="relative bg-base-2 px-5 py-24 sm:px-8 lg:py-16">
+    <section ref={root} id="lineup" className="section-fade relative bg-base-2 px-5 py-24 sm:px-8 lg:py-16">
       <div className="mx-auto max-w-[1400px]">
         {/* Heading row */}
         <div className="flex items-end justify-between gap-6">
           <div>
-            <Eyebrow>The Collection</Eyebrow>
-            <h2 className="mt-4 font-display text-[clamp(2.1rem,5vw,3.6rem)] font-light leading-[1.0] tracking-[-0.02em] text-fg">
+            <div data-scrub>
+              <Eyebrow>The Collection</Eyebrow>
+            </div>
+            <SplitLines className="mt-4 font-display text-[clamp(2.1rem,5vw,3.6rem)] font-light leading-[1.0] tracking-[-0.02em] text-fg">
               The 2026 Lineup
-            </h2>
+            </SplitLines>
           </div>
-          <p className="hidden max-w-xs text-right text-sm leading-relaxed text-muted md:block">
+          <p data-scrub className="hidden max-w-xs text-right text-sm leading-relaxed text-muted md:block">
             Drivers, irons, balls and apparel — engineered as one coherent system.
           </p>
         </div>
 
         {/* Grid */}
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4 lg:gap-7">
+        <div ref={grid} className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4 lg:gap-7">
           {PRODUCTS.map((p) => (
             <article
               key={p.n}
-              className="group relative overflow-hidden rounded-2xl border border-line bg-surface"
+              className="showcase-card group relative overflow-hidden rounded-2xl border border-line bg-surface"
             >
               <div className="relative h-[34vh] min-h-[200px] max-h-[420px] overflow-hidden lg:h-[38vh]">
-                <img
-                  src={p.img}
-                  alt={`${p.name} ${p.category}`}
-                  loading="lazy"
-                  className="h-full w-full object-cover"
-                />
+                <div className="showcase-parallax h-full w-full will-change-transform">
+                  <img
+                    src={p.img}
+                    alt={`${p.name} ${p.category}`}
+                    loading="lazy"
+                    className="h-full w-full scale-[1.16] object-cover transition-transform duration-500 ease-[var(--ease-quiet)] group-hover:scale-[1.2]"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/10 to-transparent" />
                 <span className="absolute left-4 top-4 font-display text-sm text-fg/70">
                   {p.n}

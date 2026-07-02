@@ -85,6 +85,20 @@
 
   /* Mask for SplitText line reveals */
   .line-mask { overflow: hidden; display: block; }
+
+  /* Static-background scene: the image is pinned to the viewport while the
+     page scrolls over it (the classic fixed-bg "window" effect). */
+  .bg-fixed-scene {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  /* iOS Safari mis-renders background-attachment: fixed — fall back to a
+     normally scrolling cover image there. */
+  @supports (-webkit-touch-callout: none) {
+    .bg-fixed-scene { background-attachment: scroll; }
+  }
 }
 
 /* ----------------------------------------------------------------------------
@@ -99,7 +113,14 @@
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    /* MUST be 0s, not 0.01ms: any duration > 0 creates an implicit
+       transition on EVERY property of EVERY element, which makes style
+       writes apply asynchronously. ScrollTrigger writes the pin-spacer
+       padding and measures synchronously during refresh — with 0.01ms it
+       reads the stale (pre-transition) layout and computes every trigger
+       below the pinned hero ~1 viewport too early. */
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
   .rm-hide-desktop { display: none !important; }

@@ -1,4 +1,4 @@
-import { Eyebrow } from "./primitives";
+import { Eyebrow, Reveal, SplitLines } from "./primitives";
 
 const FEATURED = {
   name: "Daniel Voss",
@@ -16,16 +16,18 @@ const QUOTES = [
 
 export default function Testimonials() {
   return (
-    <section id="athletes" className="relative bg-base px-5 py-24 sm:px-8 lg:py-32">
+    <section id="athletes" className="section-fade relative bg-base px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-[1400px]">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <Eyebrow>Trusted on Tour</Eyebrow>
-            <h2 className="mt-4 max-w-xl font-display text-[clamp(2rem,5vw,3.4rem)] font-light leading-[1.02] tracking-[-0.02em] text-fg">
+            <div data-scrub>
+              <Eyebrow>Trusted on Tour</Eyebrow>
+            </div>
+            <SplitLines className="mt-4 max-w-xl font-display text-[clamp(2rem,5vw,3.4rem)] font-light leading-[1.02] tracking-[-0.02em] text-fg">
               Proven by the players who chase titles.
-            </h2>
+            </SplitLines>
           </div>
-          <div className="flex gap-10">
+          <div data-scrub className="flex gap-10">
             {[
               ["37", "Tour wins"],
               ["11", "Countries"],
@@ -40,7 +42,8 @@ export default function Testimonials() {
 
         {/* Featured athlete */}
         <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
-          <figure className="relative overflow-hidden rounded-2xl border border-line lg:col-span-7">
+          <Reveal y={40} className="lg:col-span-7">
+          <figure className="relative h-full overflow-hidden rounded-2xl border border-line">
             <div className="grid grid-cols-1 sm:grid-cols-2">
               <div className="aspect-[4/5] sm:aspect-auto">
                 <img
@@ -61,12 +64,13 @@ export default function Testimonials() {
               </figcaption>
             </div>
           </figure>
+          </Reveal>
 
           {/* Supporting quotes */}
           <div className="flex flex-col gap-5 lg:col-span-5">
-            {QUOTES.map((q) => (
+            {QUOTES.map((q, i) => (
+              <Reveal key={q.name} y={32} delay={i * 0.1}>
               <figure
-                key={q.name}
                 className="testimonial-card rounded-2xl border border-line bg-surface p-6 sm:p-7"
               >
                 <blockquote className="text-[1.02rem] leading-relaxed text-fg/90">
@@ -82,6 +86,7 @@ export default function Testimonials() {
                   </span>
                 </figcaption>
               </figure>
+              </Reveal>
             ))}
           </div>
         </div>

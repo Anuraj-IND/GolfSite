@@ -1,6 +1,6 @@
 import { useRef, type ElementType, type ReactNode } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, SplitText } from "@/lib/gsap";
 import { EASE } from "@/lib/motion";
 import { cn } from "@/utils/cn";
 
@@ -150,5 +150,67 @@ export function Reveal({
     <div ref={ref} className={className}>
       {children}
     </div>
+  );
+}
+
+/* ------------------------------------------------------------- SplitLines */
+/**
+ * Masked line reveal for display headlines, SCRUBBED to scroll: each line
+ * slides out of its overflow-hidden mask as the heading moves through the
+ * trigger zone, and slides back when scrolling up. autoSplit re-splits on
+ * resize/font-load and re-creates the tween returned from onSplit.
+ * Gated behind prefers-reduced-motion: no-preference — with motion disabled
+ * the heading renders as plain static text.
+ */
+export function SplitLines({
+  children,
+  className,
+  as,
+  start = "top 94%",
+  end = "top 58%",
+}: {
+  children: ReactNode;
+  className?: string;
+  as?: ElementType;
+  start?: string;
+  end?: string;
+}) {
+  const Comp: ElementType = as ?? "h2";
+  const ref = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el) return;
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 0px)", () => {
+        const split = SplitText.create(el, {
+          type: "lines",
+          mask: "lines",
+          autoSplit: true,
+          onSplit: (self) =>
+            gsap.from(self.lines, {
+              yPercent: 115,
+              ease: "power1.out",
+              stagger: 0.14,
+              scrollTrigger: {
+                trigger: el,
+                start,
+                end,
+                scrub: 0.5,
+              },
+            }),
+        });
+        return () => split.revert();
+      });
+      return () => mm.revert();
+    },
+    { scope: ref }
+  );
+
+  return (
+    <Comp ref={ref} className={className}>
+      {children}
+    </Comp>
   );
 }

@@ -27,6 +27,74 @@ export default function App() {
       });
     });
 
+    // Section fade-through: each marked section fades + drifts up into place
+    // as it enters the viewport, then fades out and lifts away as it exits.
+    // Scrubbed, so it rewinds on scroll-up. The pinned Hero and the fixed-bg
+    // interstitial are deliberately NOT marked (a transform on the
+    // interstitial would break background-attachment: fixed).
+    // NOTE: gated on min-width like the hero's scrub (site convention), NOT
+    // on prefers-reduced-motion — Windows "Animation effects: off" reports
+    // reduce and would silently disable all scroll choreography.
+    mm.add("(min-width: 0px)", () => {
+      // Scroll-scrubbed text rise: any element tagged data-scrub fades and
+      // drifts up in sync with scroll position (and back down on scroll-up).
+      gsap.utils.toArray<HTMLElement>("[data-scrub]").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 97%",
+              end: "top 70%",
+              scrub: 0.4,
+            },
+          }
+        );
+      });
+
+      // Opacity only (never visibility:hidden, never a full blackout) and no
+      // scale — so a mis-measured trigger can dim a section but can never
+      // make it vanish, and section transforms can't retrigger SplitText's
+      // ResizeObserver re-splits.
+      gsap.utils.toArray<HTMLElement>(".section-fade").forEach((sec) => {
+        gsap.fromTo(
+          sec,
+          { opacity: 0.2, y: 48 },
+          {
+            opacity: 1,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sec,
+              start: "top 96%",
+              end: "top 64%",
+              scrub: 0.4,
+            },
+          }
+        );
+        gsap.fromTo(
+          sec,
+          { opacity: 1, y: 0 },
+          {
+            opacity: 0.25,
+            y: -32,
+            ease: "none",
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: sec,
+              start: "bottom 32%",
+              end: "bottom 6%",
+              scrub: 0.4,
+            },
+          }
+        );
+      });
+    });
+
     // Recalculate all triggers after fonts + images have settled.
     // Only ever run once — firing ScrollTrigger.refresh() more than once while
     // the user is mid-scroll through a pinned section snaps/jumps the pin, which

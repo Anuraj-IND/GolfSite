@@ -1,17 +1,70 @@
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap, SplitText } from "@/lib/gsap";
 import { Eyebrow } from "./primitives";
 
 export default function ParallaxInterstitial() {
+  const root = useRef<HTMLElement>(null);
+  const word = useRef<HTMLSpanElement>(null);
+  const statement = useRef<HTMLParagraphElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 0px)", () => {
+        // Kinetic wordmark — drifts laterally as the scene scrolls past.
+        gsap.fromTo(
+          word.current,
+          { xPercent: 6 },
+          {
+            xPercent: -6,
+            ease: "none",
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          }
+        );
+
+        // Statement fills in word by word as the scene scrolls through the
+        // viewport — scrubbed, so it drains back out on scroll-up.
+        if (!statement.current) return;
+        const split = SplitText.create(statement.current, { type: "words" });
+        gsap.from(split.words, {
+          opacity: 0.12,
+          y: 14,
+          ease: "none",
+          stagger: 0.05,
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 72%",
+            end: "center 42%",
+            scrub: 0.4,
+          },
+        });
+        return () => split.revert();
+      });
+      return () => mm.revert();
+    },
+    { scope: root }
+  );
+
   return (
-    <section className="relative h-[70vh] min-h-[520px] w-full overflow-hidden bg-base">
-      {/* Back plane — fairway */}
-      <div className="absolute inset-0">
-        <img
-          src="/images/scene-fairway.jpg"
-          alt="Misty championship fairway at dawn"
-          className="h-full w-full object-cover"
-          loading="lazy"
-        />
-      </div>
+    <section
+      ref={root}
+      className="relative h-[85vh] min-h-[560px] w-full overflow-hidden bg-base"
+    >
+      {/* Back plane — fairway, fixed to the viewport so the page scrolls
+          over it (classic "static background" window effect). Falls back to
+          normal attachment on iOS where fixed backgrounds are broken. */}
+      <div
+        className="bg-fixed-scene absolute inset-0"
+        style={{ backgroundImage: "url(/images/scene-fairway.jpg)" }}
+        role="img"
+        aria-label="Misty championship fairway at dawn"
+      />
 
       {/* Haze for atmosphere */}
       <div
@@ -23,9 +76,10 @@ export default function ParallaxInterstitial() {
       />
 
       {/* Outlined kinetic wordmark */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
         <span
-          className="select-none whitespace-nowrap font-display text-[26vw] font-light leading-none tracking-tight text-transparent"
+          ref={word}
+          className="select-none whitespace-nowrap font-display text-[26vw] font-light leading-none tracking-tight text-transparent will-change-transform"
           style={{ WebkitTextStroke: "1px rgba(232,239,230,0.10)" }}
         >
           MERIDIAN
@@ -35,10 +89,13 @@ export default function ParallaxInterstitial() {
       {/* Foreground statement */}
       <div className="absolute inset-0 z-10 flex items-center">
         <div className="mx-auto w-full max-w-[1000px] px-5 text-center sm:px-8">
-          <div className="flex justify-center">
+          <div data-scrub className="flex justify-center">
             <Eyebrow>The Meridian Standard</Eyebrow>
           </div>
-          <p className="mx-auto mt-6 max-w-3xl font-display text-[clamp(1.7rem,4.4vw,3rem)] font-light leading-[1.15] tracking-[-0.01em] text-fg">
+          <p
+            ref={statement}
+            className="mx-auto mt-6 max-w-3xl font-display text-[clamp(1.7rem,4.4vw,3rem)] font-light leading-[1.15] tracking-[-0.01em] text-fg"
+          >
             We don't chase distance. We{" "}
             <span className="text-accent">engineer</span> it — one micron, one
             swing, one Sunday at a time.
