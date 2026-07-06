@@ -11,7 +11,7 @@ const FEATURED = {
 const QUOTES = [
   { name: "Maria Solano", title: "LPGA · Major champion", quote: "More distance, without losing the flight I trust in the wind." },
   { name: "Kaito Ren", title: "PGA Tour · Rookie of the Year", quote: "The forged irons spin exactly how I draw them up on the range." },
-  { name: "Marcus Field", title: "Head Coach, Atlas Academy", quote: "We fit the entire squad in Meridian. The tolerances are simply unreal." },
+  { name: "Marcus Field", title: "Head Coach, Atlas Academy", quote: "We fit the entire squad in Golf Thing. The tolerances are simply unreal." },
 ];
 
 export default function Testimonials() {

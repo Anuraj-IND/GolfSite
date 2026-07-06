@@ -61,7 +61,10 @@ export default function ParallaxInterstitial() {
           normal attachment on iOS where fixed backgrounds are broken. */}
       <div
         className="bg-fixed-scene absolute inset-0"
-        style={{ backgroundImage: "url(/images/scene-fairway.jpg)" }}
+        style={{
+          backgroundImage: "url(/images/scene-fairway.jpg)",
+          filter: "saturate(0.55) brightness(0.95)",
+        }}
         role="img"
         aria-label="Misty championship fairway at dawn"
       />
@@ -79,10 +82,10 @@ export default function ParallaxInterstitial() {
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
         <span
           ref={word}
-          className="select-none whitespace-nowrap font-display text-[26vw] font-light leading-none tracking-tight text-transparent will-change-transform"
-          style={{ WebkitTextStroke: "1px rgba(232,239,230,0.10)" }}
+          className="select-none whitespace-nowrap font-display text-[clamp(2.5rem,12vw,9rem)] font-light leading-none tracking-tight text-transparent will-change-transform"
+          style={{ WebkitTextStroke: "1px rgba(232,239,230,0.24)" }}
         >
-          MERIDIAN
+          GOLF THING
         </span>
       </div>
 
@@ -90,7 +93,7 @@ export default function ParallaxInterstitial() {
       <div className="absolute inset-0 z-10 flex items-center">
         <div className="mx-auto w-full max-w-[1000px] px-5 text-center sm:px-8">
           <div data-scrub className="flex justify-center">
-            <Eyebrow>The Meridian Standard</Eyebrow>
+            <Eyebrow>The Golf Thing Standard</Eyebrow>
           </div>
           <p
             ref={statement}

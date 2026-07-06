@@ -14,7 +14,7 @@ type Product = {
 };
 
 const PRODUCTS: Product[] = [
-  { n: "01", category: "Driver", name: "Meridian One", spec: "460cc · C300 steel face", price: "$649", img: "/images/product-driver.jpg" },
+  { n: "01", category: "Driver", name: "Golf Thing One", spec: "460cc · C300 steel face", price: "$649", img: "/images/product-driver.jpg" },
   { n: "02", category: "Irons", name: "Forged MB", spec: "5–PW · 1025 carbon steel", price: "$1,499", img: "/images/product-irons.jpg" },
   { n: "03", category: "Ball", name: "Tour Pro", spec: "4-piece urethane cover", price: "$58 / doz", img: "/images/product-ball.jpg" },
   { n: "04", category: "Apparel", name: "Performance Kit", spec: "Polo + structured cap", price: "$148", img: "/images/product-apparel.jpg" },

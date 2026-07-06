@@ -4,7 +4,7 @@ import { gsap, SplitText } from "@/lib/gsap";
 import { EASE } from "@/lib/motion";
 import { cn } from "@/utils/cn";
 
-export const BRAND = "MERIDIAN";
+export const BRAND = "Golf Thing";
 
 /* ------------------------------------------------------------------ Icons */
 type IconProps = { className?: string };
@@ -46,7 +46,7 @@ export function Logo({ className }: { className?: string }) {
         <circle cx="16" cy="5" r="2.6" className="fill-accent" />
       </svg>
       <span className="font-display text-[1.05rem] font-medium tracking-[0.22em] text-fg">
-        MERIDIAN
+        GOLF THING
       </span>
     </span>
   );

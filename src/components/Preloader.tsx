@@ -128,7 +128,7 @@ export default function Preloader() {
 
         <div className="overflow-hidden">
           <span className="pre-word block font-display text-[1.4rem] font-medium tracking-[0.42em] text-fg">
-            MERIDIAN
+            GOLF THING
           </span>
         </div>
       </div>

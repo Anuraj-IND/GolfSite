@@ -56,7 +56,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-line pt-7 text-[0.78rem] text-faint sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} Meridian Golf. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Golf Thing. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#top" className="transition-colors hover:text-fg">Privacy</a>
             <a href="#top" className="transition-colors hover:text-fg">Terms</a>

@@ -9,7 +9,6 @@ export default function Hero() {
   const root = useRef<HTMLDivElement>(null);
   const headline = useRef<HTMLHeadingElement>(null);
   const textGroup = useRef<HTMLDivElement>(null);
-  const glow = useRef<HTMLDivElement>(null);
   const cue = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -87,9 +86,7 @@ export default function Hero() {
       tl
         .to(textGroup.current, { yPercent: -14 }, 0)
         .to(textGroup.current, { autoAlpha: 0 }, 0.3)
-        .to(cue.current, { autoAlpha: 0, duration: 0.15 }, 0)
-        .to(glow.current, { scale: 1.6, autoAlpha: 0.65 }, 0)
-        .to(glow.current, { autoAlpha: 0 }, 0.85);
+        .to(cue.current, { autoAlpha: 0, duration: 0.15 }, 0);
 
       return () => window.removeEventListener(PRELOADER_DONE_EVENT, play);
     });
@@ -103,7 +100,7 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative min-h-screen w-full bg-base"
+      className="relative min-h-screen w-full bg-transparent lg:bg-base"
     >
       {/* Background image — backmost layer. Two art-directed crops: a tight
           landscape frame on desktop, a full-body portrait on phones. */}
@@ -113,27 +110,13 @@ export default function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-center opacity-60 lg:block"
       />
-      <img
-        src="/images/hero-bg-mobile.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-60 lg:hidden"
-      />
       {/* Scrim: horizontal fade keeps the left-hand copy legible over the image;
-          the extra vertical wash gives stacked mobile copy its own contrast. */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-base via-base/70 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/70 via-transparent to-base/70 lg:hidden" />
+          the extra vertical wash gives stacked mobile copy its own contrast.
+          Dimmed down from the original — a lighter tint than before. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-base/60 via-base/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/40 via-transparent to-base/40 lg:hidden" />
 
       {/* Ambient layers (static, atmospheric — no looping motion) */}
-      <div
-        ref={glow}
-        className="pointer-events-none absolute left-1/2 top-[42%] h-[70vw] w-[70vw] max-h-[760px] max-w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(198,255,58,0.16) 0%, rgba(198,255,58,0.05) 38%, transparent 68%)",
-          filter: "blur(20px)",
-        }}
-      />
       <Topo className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.5]" />
 
       {/* Vertical editorial side label */}

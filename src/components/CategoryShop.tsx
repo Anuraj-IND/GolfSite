@@ -60,7 +60,7 @@ const CATEGORIES: Category[] = [
     slug: "apparel",
     label: "Golf Apparel",
     kicker: "Apparel",
-    blurb: "Performance fabric on and off the course, in the Meridian palette.",
+    blurb: "Performance fabric on and off the course, in the Golf Thing palette.",
     img: "/images/product-apparel.jpg",
     items: [
       { name: "Polo Shirts", spec: "Moisture-wicking · UPF 30", price: "From $68", img: "/images/product-apparel.jpg" },
@@ -228,7 +228,7 @@ export default function CategoryShop() {
             </SplitLines>
           </div>
           <p data-scrub className="hidden max-w-xs text-right text-sm leading-relaxed text-muted md:block">
-            Eleven categories, engineered to the same Meridian standard — from
+            Eleven categories, engineered to the same Golf Thing standard — from
             tour clubs to the last tee in the bag.
           </p>
         </div>

@@ -48,7 +48,7 @@ export default function Navbar() {
         )}
       >
         <nav className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-5 sm:px-8 lg:h-20">
-          <a href="#top" className="text-fg" aria-label="Meridian home">
+          <a href="#top" className="text-fg" aria-label="Golf Thing home">
             <Logo />
           </a>
 

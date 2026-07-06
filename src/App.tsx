@@ -5,6 +5,7 @@ import Preloader from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import BallFlight from "@/components/BallFlight";
+import OnSaleNow from "@/components/OnSaleNow";
 import Showcase from "@/components/Showcase";
 import TechBreakdown from "@/components/TechBreakdown";
 import CategoryShop from "@/components/CategoryShop";
@@ -136,8 +137,23 @@ export default function App() {
       <Navbar />
 
       <main>
-        <Hero />
-        <BallFlight />
+        {/* Hero + BallFlight share ONE fixed-attachment background on mobile,
+            so the photo stays pinned to the viewport as a single continuous
+            "window" scene across both sections (rather than each section
+            trying to run its own fixed background, which shows the same
+            fixed-position image twice whenever both sections are partly
+            visible at once). Each section's own <section> background is
+            transparent on mobile so this shared layer shows through. */}
+        <div className="relative">
+          <div
+            className="bg-fixed-scene pointer-events-none absolute inset-0 opacity-60 lg:hidden"
+            style={{ backgroundImage: "url(/images/hero-bg-mobile.png)" }}
+            aria-hidden="true"
+          />
+          <Hero />
+          <BallFlight />
+        </div>
+        <OnSaleNow />
         <Showcase />
         <TechBreakdown />
         <CategoryShop />

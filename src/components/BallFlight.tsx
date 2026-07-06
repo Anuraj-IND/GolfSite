@@ -54,8 +54,14 @@ export default function BallFlight() {
     <section
       ref={root}
       id="flight"
-      className="section-fade relative overflow-hidden bg-base px-5 py-24 sm:px-8"
+      className="section-fade relative overflow-hidden bg-transparent px-5 py-24 sm:px-8 lg:bg-base"
     >
+      {/* Mobile-only legibility wash over the shared Hero+BallFlight
+          background (the fixed photo itself lives in App.tsx, one layer
+          shared by both sections — see the comment there). Plain overlay,
+          not another fixed-attachment layer, so it doesn't duplicate the scene. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/60 via-base/20 to-base/85 lg:hidden" />
+
       <svg
         className="pointer-events-none absolute inset-x-0 top-6 mx-auto h-40 w-full max-w-2xl opacity-70"
         viewBox="0 0 600 160"
