@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { EASE } from "@/lib/motion";
-import { Eyebrow, PlusIcon, SplitLines } from "./primitives";
+import { Eyebrow, CartIcon, SplitLines } from "./primitives";
 import { cn } from "@/utils/cn";
 
 type Item = { name: string; spec: string; price: string; img: string };
@@ -286,26 +286,31 @@ export default function CategoryShop() {
           })}
         </div>
 
-        {/* Active category blurb */}
-        <div className="mt-10 flex items-baseline justify-between gap-4 border-t border-line pt-6">
-          <p className="max-w-md text-sm leading-relaxed text-muted">{category.blurb}</p>
-          <span className="hidden shrink-0 text-[0.7rem] uppercase tracking-[0.2em] text-faint sm:block">
-            {category.items.length} collections
-          </span>
+        {/* Active category heading + blurb */}
+        <div className="mt-10 border-t border-line pt-6">
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="font-display text-[clamp(1.5rem,3.5vw,2.25rem)] font-light leading-tight tracking-[-0.01em] text-fg">
+              {category.label}
+            </h3>
+            <span className="hidden shrink-0 text-[0.7rem] uppercase tracking-[0.2em] text-faint sm:block">
+              {category.items.length} collections
+            </span>
+          </div>
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">{category.blurb}</p>
         </div>
 
         {/* Sub-category cards */}
         <div
           ref={grid}
           key={category.slug}
-          className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5"
+          className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5 lg:gap-5"
         >
           {category.items.map((item, i) => (
             <article
               key={item.name}
               className="shop-card group relative overflow-hidden rounded-2xl border border-line bg-surface"
             >
-              <div className="relative h-[34vh] min-h-[200px] max-h-[420px] overflow-hidden lg:h-[30vh]">
+              <div className="relative h-[26vh] min-h-[150px] max-h-[420px] overflow-hidden sm:h-[34vh] sm:min-h-[200px] lg:h-[30vh]">
                 <img
                   src={item.img}
                   alt={item.name}
@@ -318,24 +323,31 @@ export default function CategoryShop() {
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 p-5">
+              <div className="flex flex-col gap-3 p-3.5 sm:p-5">
                 <div>
-                  <div className="text-[0.68rem] uppercase tracking-[0.22em] text-accent">
+                  <div className="text-[0.6rem] uppercase tracking-[0.22em] text-accent sm:text-[0.68rem]">
                     {category.kicker}
                   </div>
-                  <h3 className="mt-1.5 font-display text-xl text-fg">{item.name}</h3>
-                  <p className="mt-1 text-[0.8rem] text-muted">{item.spec}</p>
+                  <h3 className="mt-1.5 font-display text-base text-fg sm:text-xl">{item.name}</h3>
+                  <p className="mt-1 text-[0.72rem] text-muted sm:text-[0.8rem]">{item.spec}</p>
                 </div>
-                <div className="flex flex-col items-end gap-3">
-                  <span className="text-sm font-medium text-fg">{item.price}</span>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[0.8rem] font-medium text-fg sm:text-sm">{item.price}</span>
                   <button
                     type="button"
-                    aria-label={`Browse ${item.name}`}
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line-strong text-fg transition-[background-color,border-color] duration-200 ease-[var(--ease-quiet)] hover:border-accent hover:bg-accent hover:text-base"
+                    aria-label={`Add ${item.name} to cart`}
+                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line-strong text-fg transition-[background-color,border-color] duration-200 ease-[var(--ease-quiet)] hover:border-accent hover:bg-accent hover:text-base sm:h-10 sm:w-10"
                   >
-                    <PlusIcon className="h-4 w-4" />
+                    <CartIcon className="h-4 w-4" />
                   </button>
                 </div>
+                <button
+                  type="button"
+                  aria-label={`Buy ${item.name} now`}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-accent px-4 py-2.5 text-[0.82rem] font-medium text-base transition-[background-color,transform] duration-200 ease-[var(--ease-quiet)] hover:bg-accent-2 active:scale-[0.98] sm:text-[0.88rem]"
+                >
+                  Buy Now
+                </button>
               </div>
             </article>
           ))}

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { EASE } from "@/lib/motion";
-import { Eyebrow, ArrowRight, SplitLines } from "./primitives";
+import { Eyebrow, CartIcon, SplitLines } from "./primitives";
 
 type Product = {
   n: string;
@@ -122,16 +122,23 @@ export default function Showcase() {
                   <span className="shrink-0 text-sm font-medium text-fg">{p.price}</span>
                 </div>
 
-                {/* Product CTA — full-width, fills accent on hover (matches the
-                    card interaction language; primary lift is reserved for the
-                    page-level CTAs, not repeated on every card). */}
+                {/* Primary purchase action, directly under the price. */}
                 <button
                   type="button"
-                  aria-label={`Add ${p.name} to bag`}
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-line-strong px-5 py-3 text-[0.88rem] font-medium text-fg transition-[background-color,border-color,color,transform] duration-200 ease-[var(--ease-quiet)] hover:border-accent hover:bg-accent hover:text-base active:scale-[0.98]"
+                  aria-label={`Buy ${p.name} now`}
+                  className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-accent px-5 py-3 text-[0.88rem] font-medium text-base transition-[background-color,transform] duration-200 ease-[var(--ease-quiet)] hover:bg-accent-2 active:scale-[0.98]"
                 >
-                  Add to Bag
-                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  Buy Now
+                </button>
+
+                {/* Add-to-cart — secondary, ghost style with basket icon. */}
+                <button
+                  type="button"
+                  aria-label={`Add ${p.name} to cart`}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-line-strong px-5 py-3 text-[0.88rem] font-medium text-fg transition-[background-color,border-color,color,transform] duration-200 ease-[var(--ease-quiet)] hover:border-accent hover:bg-accent hover:text-base active:scale-[0.98]"
+                >
+                  <CartIcon className="h-4 w-4" />
+                  Add to Cart
                 </button>
               </div>
             </article>
