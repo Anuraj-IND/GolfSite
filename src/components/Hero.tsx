@@ -11,6 +11,7 @@ export default function Hero() {
   const product = useRef<HTMLDivElement>(null);
   const glow = useRef<HTMLDivElement>(null);
   const cue = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -108,9 +109,47 @@ export default function Hero() {
         .to(product.current, { rotation: 11, y: 0, scale: 1.3 }, 0)
         .to(glow.current, { scale: 1.6, autoAlpha: 0.65 }, 0)
         .to(glow.current, { autoAlpha: 0 }, 0.85);
+
+      // Scroll-scrubbed background video: drive currentTime from the SAME pinned
+      // timeline so the clip runs forward on scroll-down and backward on scroll-up.
+      // `duration: tl.duration()` at position 0 stretches the seek across the WHOLE
+      // pin, so the clip plays start→finish exactly as the hero scrolls through and
+      // hits its last frame right as the section unpins and the page moves on.
+      // Adding it at position 0 with the current total duration doesn't lengthen
+      // the timeline. `() => v.duration` is a function-based end so it re-reads the
+      // real duration on ScrollTrigger.refresh() once metadata has loaded.
+      const v = video.current;
+      if (v) {
+        const span = tl.duration();
+        const scrubState = { t: 0 };
+        tl.to(
+          scrubState,
+          {
+            t: () => v.duration || 0,
+            duration: span,
+            ease: "none",
+            onUpdate: () => {
+              if (v.readyState >= 1) v.currentTime = scrubState.t;
+            },
+          },
+          0
+        );
+      }
     });
 
-    return () => mm.revert();
+    // Pin distance and the duration-based video tween are only correct once the
+    // video's metadata (and thus its intrinsic duration) is known — refresh then.
+    const v = video.current;
+    const onMeta = () => ScrollTrigger.refresh();
+    if (v) {
+      if (v.readyState >= 1) ScrollTrigger.refresh();
+      else v.addEventListener("loadedmetadata", onMeta, { once: true });
+    }
+
+    return () => {
+      v?.removeEventListener("loadedmetadata", onMeta);
+      mm.revert();
+    };
   }, {});
 
   return (
@@ -119,6 +158,23 @@ export default function Hero() {
       id="top"
       className="relative min-h-screen w-full bg-base"
     >
+      {/* Scroll-scrubbed background video — backmost layer. Muted + playsInline
+          so mobile browsers allow programmatic seeking; the poster (and, below
+          lg, the natural absence of the scrub) keeps a static frame on phones.
+          Drop the asset at public/videos/hero.mp4 (+ hero-poster.jpg). */}
+      <video
+        ref={video}
+        src="/videos/hero.mp4"
+        poster="/videos/hero-poster.jpg"
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
+      />
+      {/* Scrim: keeps the copy legible over arbitrary video content. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-base via-base/70 to-transparent" />
+
       {/* Ambient layers (static, atmospheric — no looping motion) */}
       <div
         ref={glow}
